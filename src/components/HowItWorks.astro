@@ -1,0 +1,27 @@
+---
+const steps = [
+	{ title: 'Tell us what you need', text: 'Product, quantity, colours and your logo.' },
+	{ title: 'Get your quote', text: 'We send a clear price and a design mockup.' },
+	{ title: 'Approve', text: 'Confirm the design and the order details.' },
+	{ title: 'We produce & deliver', text: 'Printed, checked and delivered to your door.' },
+];
+---
+
+<section id="how-it-works" class="py-20">
+	<div class="mx-auto max-w-6xl px-4 sm:px-6">
+		<h2 class="text-3xl font-bold text-navy sm:text-4xl">How it works</h2>
+		<ol class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+			{
+				steps.map((step, i) => (
+					<li>
+						<span class="flex h-10 w-10 items-center justify-center rounded-full bg-navy font-bold text-white">
+							{i + 1}
+						</span>
+						<h3 class="mt-4 text-lg font-semibold text-navy">{step.title}</h3>
+						<p class="mt-1 text-sm text-slate-600">{step.text}</p>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+</section>

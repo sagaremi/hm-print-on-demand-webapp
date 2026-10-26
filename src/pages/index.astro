@@ -1,10 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Gallery from '../components/Gallery.astro';
+import WhyUs from '../components/WhyUs.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import QuoteCta from '../components/QuoteCta.astro';
 ---
 
-<Layout title="Custom Corporate T-Shirts | Coming Soon">
-	<main class="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
-		<h1 class="text-3xl font-bold sm:text-5xl">Custom Corporate T-Shirts</h1>
-		<p class="text-lg text-slate-600">Printed &amp; delivered. Website coming soon.</p>
-	</main>
+<Layout
+	title="HoodMeta | Custom Corporate T-Shirts in Delhi NCR, Panipat, UP & Punjab"
+	description="Bulk custom corporate T-shirts, polos and uniforms with screen printing, embroidery and DTF. Serving Delhi NCR, Panipat, Uttar Pradesh and Punjab."
+>
+	<Hero />
+	<Gallery />
+	<WhyUs />
+	<HowItWorks />
+	<QuoteCta />
 </Layout>

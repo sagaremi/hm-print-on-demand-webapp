@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@theme {
+	--color-navy: #0f1f3d;
+	--color-navy-light: #1e3a6b;
+	--color-accent: #f59e0b;
+	--color-accent-dark: #d97706;
+	--color-whatsapp: #25d366;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+section[id] {
+	scroll-margin-top: 4rem;
+}
