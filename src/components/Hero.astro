@@ -1,10 +1,22 @@
 ---
+import { Image } from 'astro:assets';
 import { site, whatsappLink } from '../config/site';
+import heroImage from '../assets/hero-team-polos.png';
 
 const highlights = ['T-shirts, polos & uniforms', 'Screen print · Embroidery · DTF', 'Delivery across India'];
 ---
 
-<section class="bg-navy text-white">
+<section class="relative isolate overflow-hidden bg-navy text-white">
+	<Image
+		src={heroImage}
+		alt=""
+		widths={[640, 1024, 1536]}
+		sizes="100vw"
+		loading="eager"
+		fetchpriority="high"
+		class="absolute inset-0 -z-10 h-full w-full object-cover object-[70%_center]"
+	/>
+	<div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy via-navy/85 to-navy/40"></div>
 	<div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
 		<p class="text-sm font-semibold tracking-wide text-accent uppercase">For offices, events & teams</p>
 		<h1 class="mt-4 max-w-3xl text-4xl leading-tight font-extrabold sm:text-6xl">
