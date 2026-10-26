@@ -1,0 +1,163 @@
+---
+import { pricing } from '../config/pricing';
+
+const defaultQuantity = 100;
+const quickQuantities = [25, 50, 100, 250, 500];
+const firstProduct = pricing.products[0];
+---
+
+<section id="estimator" class="bg-slate-50 py-20">
+	<div class="mx-auto max-w-4xl px-4 sm:px-6">
+		<h2 class="text-3xl font-bold text-navy sm:text-4xl">Get an instant price</h2>
+		<p class="mt-3 text-slate-600">
+			Pick a product, print type and quantity to see an estimate. Minimum order is {pricing.minimumOrder} pieces.
+		</p>
+
+		<form id="estimator-form" class="mt-10 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+			<div class="grid gap-6 sm:grid-cols-2">
+				<label class="block">
+					<span class="text-sm font-semibold text-navy">Product</span>
+					<select
+						name="product"
+						class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-3 focus:border-navy focus:outline-none"
+					>
+						{pricing.products.map((product, i) => <option value={i}>{product.name}</option>)}
+					</select>
+				</label>
+				<label class="block">
+					<span class="text-sm font-semibold text-navy">Print type</span>
+					<select
+						name="print"
+						class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-3 focus:border-navy focus:outline-none"
+					>
+						{Object.keys(firstProduct.prices).map((print) => <option value={print}>{print}</option>)}
+					</select>
+				</label>
+			</div>
+
+			<label class="mt-6 block">
+				<span class="text-sm font-semibold text-navy">Quantity</span>
+				<input
+					name="quantity"
+					type="number"
+					inputmode="numeric"
+					min={pricing.minimumOrder}
+					step="1"
+					value={defaultQuantity}
+					class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-3 focus:border-navy focus:outline-none sm:w-48"
+				/>
+			</label>
+			<div class="mt-3 flex flex-wrap gap-2">
+				{
+					quickQuantities.map((qty) => (
+						<button
+							type="button"
+							data-qty={qty}
+							class="rounded-full border border-slate-300 px-4 py-1.5 text-sm text-slate-700 transition hover:border-navy hover:text-navy"
+						>
+							{qty}
+						</button>
+					))
+				}
+			</div>
+
+			<div class="mt-8 rounded-xl bg-navy p-6 text-white" aria-live="polite">
+				<div id="estimate-result">
+					<p class="text-sm text-slate-300">Estimated price</p>
+					<p class="mt-1 text-4xl font-extrabold">
+						<span id="estimate-per-unit">–</span>
+						<span id="estimate-unit" class="ml-1 text-base font-medium text-slate-300"></span>
+					</p>
+					<p class="mt-2 text-slate-300">Total about <span id="estimate-total" class="font-semibold text-white">–</span></p>
+					<p id="estimate-next" class="mt-3 text-sm text-accent"></p>
+				</div>
+				<p id="estimate-error" class="hidden font-semibold text-accent"></p>
+				<p class="mt-4 text-xs text-slate-400">
+					This is an estimate. The final price depends on your design, fabric and print size.
+				</p>
+			</div>
+
+			<div class="mt-8 text-center">
+				<p class="font-semibold text-navy">Want an exact quote for your design? Share your details and we'll send it over.</p>
+				<div class="mt-4 flex flex-col justify-center gap-3 sm:flex-row">
+					<a
+						id="estimate-whatsapp"
+						href="#quote"
+						target="_blank"
+						rel="noopener"
+						class="rounded-full bg-whatsapp px-7 py-3.5 font-semibold text-white transition hover:opacity-90"
+					>
+						Get exact quote on WhatsApp
+					</a>
+					<a
+						href="#quote"
+						class="rounded-full border-2 border-navy px-7 py-3.5 font-semibold text-navy transition hover:bg-navy/10"
+					>
+						Other ways to contact us
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</section>
+
+<script>
+	import { pricing, getEstimate, formatINR } from '../config/pricing';
+	import { whatsappLink } from '../config/site';
+
+	const form = document.getElementById('estimator-form') as HTMLFormElement;
+	const productSelect = form.elements.namedItem('product') as HTMLSelectElement;
+	const printSelect = form.elements.namedItem('print') as HTMLSelectElement;
+	const quantityInput = form.elements.namedItem('quantity') as HTMLInputElement;
+	const el = (id: string) => document.getElementById(id) as HTMLElement;
+
+	function fillPrintOptions() {
+		const product = pricing.products[Number(productSelect.value)];
+		const previous = printSelect.value;
+		printSelect.replaceChildren(...Object.keys(product.prices).map((print) => new Option(print, print)));
+		if (previous in product.prices) printSelect.value = previous;
+	}
+
+	function update() {
+		const product = pricing.products[Number(productSelect.value)];
+		const quantity = Number(quantityInput.value);
+		const estimate = getEstimate(product, printSelect.value, quantity);
+		const whatsapp = el('estimate-whatsapp') as HTMLAnchorElement;
+
+		el('estimate-result').classList.toggle('hidden', !estimate);
+		el('estimate-error').classList.toggle('hidden', !!estimate);
+
+		if (!estimate) {
+			el('estimate-error').textContent = `Please enter a quantity of at least ${pricing.minimumOrder} pieces.`;
+			whatsapp.href = whatsappLink();
+			return;
+		}
+
+		el('estimate-per-unit').textContent = formatINR(estimate.perUnit);
+		el('estimate-unit').textContent = `per ${product.unit}`;
+		el('estimate-total').textContent = `${formatINR(estimate.total)} for ${quantity} ${product.unit}s`;
+		el('estimate-next').textContent = estimate.next
+			? `Order ${estimate.next.from}+ and pay ${formatINR(estimate.next.perUnit)} per ${product.unit}.`
+			: '';
+		whatsapp.href = whatsappLink(
+			`Hi HoodMeta, I'd like an exact quote for ${quantity} x ${product.name} with ${printSelect.value}. ` +
+				`The website estimate was ${formatINR(estimate.perUnit)} per ${product.unit}.`,
+		);
+	}
+
+	productSelect.addEventListener('change', () => {
+		fillPrintOptions();
+		update();
+	});
+	printSelect.addEventListener('change', update);
+	quantityInput.addEventListener('input', update);
+	form.addEventListener('submit', (event) => event.preventDefault());
+	form.querySelectorAll<HTMLButtonElement>('[data-qty]').forEach((button) =>
+		button.addEventListener('click', () => {
+			quantityInput.value = button.dataset.qty!;
+			update();
+		}),
+	);
+
+	update();
+</script>
