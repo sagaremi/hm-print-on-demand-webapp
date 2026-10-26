@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { whatsappLink } from '../config/site';
+---
+
+<Layout title="Thank you | HoodMeta" noindex>
+	<section class="py-24">
+		<div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
+			<div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent text-3xl font-bold text-navy">
+				✓
+			</div>
+			<h1 class="mt-6 text-3xl font-extrabold text-navy sm:text-4xl">Thanks, we've got your request</h1>
+			<p class="mt-4 text-lg text-slate-600">
+				We'll get back to you within a few hours. If it's urgent, message us on WhatsApp and we'll pick it up
+				straight away.
+			</p>
+			<div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+				<a
+					href={whatsappLink()}
+					target="_blank"
+					rel="noopener"
+					class="rounded-full bg-whatsapp px-7 py-3.5 font-semibold text-white transition hover:opacity-90"
+				>
+					Chat on WhatsApp
+				</a>
+				<a
+					href="/"
+					class="rounded-full border-2 border-navy px-7 py-3.5 font-semibold text-navy transition hover:bg-navy/10"
+				>
+					Back to home
+				</a>
+			</div>
+		</div>
+	</section>
+</Layout>

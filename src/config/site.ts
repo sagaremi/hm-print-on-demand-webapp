@@ -7,6 +7,8 @@ export const site = {
 	// Digits only, with country code, no "+" (format required by wa.me links)
 	whatsappNumber: '918178899405',
 	whatsappMessage: "Hi HoodMeta, I'd like a quote for custom T-shirts.",
+	// Public key from web3forms.com (safe to expose); form submissions are emailed to the address it was created with
+	web3formsAccessKey: 'PASTE_YOUR_WEB3FORMS_KEY_HERE',
 };
 
 export const whatsappLink = (message = site.whatsappMessage) =>

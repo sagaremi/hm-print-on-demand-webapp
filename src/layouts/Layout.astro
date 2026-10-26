@@ -7,9 +7,10 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
 interface Props {
 	title: string;
 	description?: string;
+	noindex?: boolean;
 }
 
-const { title, description = 'Custom corporate T-shirts, printed and delivered.' } = Astro.props;
+const { title, description = 'Custom corporate T-shirts, printed and delivered.', noindex = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -19,6 +20,7 @@ const { title, description = 'Custom corporate T-shirts, printed and delivered.'
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="description" content={description} />
+		{noindex && <meta name="robots" content="noindex" />}
 		<title>{title}</title>
 	</head>
 	<body class="bg-white text-slate-900 antialiased">

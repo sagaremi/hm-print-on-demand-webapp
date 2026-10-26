@@ -93,7 +93,7 @@ const firstProduct = pricing.products[0];
 						href="#quote"
 						class="rounded-full border-2 border-navy px-7 py-3.5 font-semibold text-navy transition hover:bg-navy/10"
 					>
-						Other ways to contact us
+						Send your requirement
 					</a>
 				</div>
 			</div>
@@ -118,11 +118,14 @@ const firstProduct = pricing.products[0];
 		if (previous in product.prices) printSelect.value = previous;
 	}
 
+	let usedByVisitor = false;
+
 	function update() {
 		const product = pricing.products[Number(productSelect.value)];
 		const quantity = Number(quantityInput.value);
 		const estimate = getEstimate(product, printSelect.value, quantity);
 		const whatsapp = el('estimate-whatsapp') as HTMLAnchorElement;
+		const leadEstimate = document.getElementById('lead-estimate') as HTMLInputElement | null;
 
 		el('estimate-result').classList.toggle('hidden', !estimate);
 		el('estimate-error').classList.toggle('hidden', !!estimate);
@@ -130,7 +133,12 @@ const firstProduct = pricing.products[0];
 		if (!estimate) {
 			el('estimate-error').textContent = `Please enter a quantity of at least ${pricing.minimumOrder} pieces.`;
 			whatsapp.href = whatsappLink();
+			if (leadEstimate) leadEstimate.value = '';
 			return;
+		}
+
+		if (leadEstimate && usedByVisitor) {
+			leadEstimate.value = `${quantity} x ${product.name}, ${printSelect.value} at ${formatINR(estimate.perUnit)} per ${product.unit}`;
 		}
 
 		el('estimate-per-unit').textContent = formatINR(estimate.perUnit);
@@ -145,17 +153,22 @@ const firstProduct = pricing.products[0];
 		);
 	}
 
+	const onVisitorChange = () => {
+		usedByVisitor = true;
+		update();
+	};
+
 	productSelect.addEventListener('change', () => {
 		fillPrintOptions();
-		update();
+		onVisitorChange();
 	});
-	printSelect.addEventListener('change', update);
-	quantityInput.addEventListener('input', update);
+	printSelect.addEventListener('change', onVisitorChange);
+	quantityInput.addEventListener('input', onVisitorChange);
 	form.addEventListener('submit', (event) => event.preventDefault());
 	form.querySelectorAll<HTMLButtonElement>('[data-qty]').forEach((button) =>
 		button.addEventListener('click', () => {
 			quantityInput.value = button.dataset.qty!;
-			update();
+			onVisitorChange();
 		}),
 	);
 
