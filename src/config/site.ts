@@ -8,7 +8,7 @@ export const site = {
 	whatsappNumber: '918178899405',
 	whatsappMessage: "Hi HoodMeta, I'd like a quote for custom T-shirts.",
 	// Public key from web3forms.com (safe to expose); form submissions are emailed to the address it was created with
-	web3formsAccessKey: 'PASTE_YOUR_WEB3FORMS_KEY_HERE',
+	web3formsAccessKey: 'a2649040-acf5-4dd7-902b-66afdbbc99d0',
 };
 
 export const whatsappLink = (message = site.whatsappMessage) =>
